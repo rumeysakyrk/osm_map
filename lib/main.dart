@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:maps_login_ui/signup_option.dart';
-import 'login.dart';
-import 'login_option.dart';
-import 'login_signup.dart';
+import 'package:maps_login_ui/login/signup_option.dart';
+import 'login/login.dart';
+import 'login/login_option.dart';
+import 'login/login_signup.dart';
 
 void main() {
   runApp(MyApp());
@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.teal,
+      backgroundColor: Colors.teal.shade200,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -113,7 +113,7 @@ class CurvePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint();
-    paint.color = Colors.tealAccent;
+    paint.color = Colors.white;
     paint.style = PaintingStyle.fill;
 
     Path path = Path();

@@ -15,7 +15,8 @@ class _Login_SignUpState extends State<Login_SignUp> {
   final confirmPasswordEditingController = TextEditingController();
   final passwordEditingController = TextEditingController();
   @override
-  Widget build(BuildContext context) {final emailField= TextFormField(
+  Widget build(BuildContext context) {
+    final emailField= TextFormField(
     autofocus: false,
     keyboardType: TextInputType.emailAddress,
     controller: emailEditingController,
@@ -38,7 +39,7 @@ class _Login_SignUpState extends State<Login_SignUp> {
         ),
       ),
       filled: true,
-      fillColor: Colors.teal.shade200,
+      fillColor: Colors.white,
       contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
     ),
   );
@@ -67,7 +68,7 @@ class _Login_SignUpState extends State<Login_SignUp> {
         ),
       ),
       filled: true,
-      fillColor: Colors.teal.shade200,
+      fillColor: Colors.white,
       contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
     ),
   );
@@ -95,7 +96,7 @@ class _Login_SignUpState extends State<Login_SignUp> {
         ),
       ),
       filled: true,
-      fillColor: Colors.teal.shade200,
+      fillColor: Colors.white,
       contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
     ),
   );
@@ -112,7 +113,7 @@ class _Login_SignUpState extends State<Login_SignUp> {
             fontWeight: FontWeight.w500),
       ),
       Text(
-        "TravelApp",
+        "TRAVELAPP",
         style: TextStyle(
           fontSize: 36,
           fontWeight: FontWeight.bold,
@@ -135,7 +136,7 @@ class _Login_SignUpState extends State<Login_SignUp> {
       Container(
         height: 40,
         decoration: BoxDecoration(
-          color: Colors.teal.shade200,
+          color: Colors.white,
           borderRadius: BorderRadius.all(
             Radius.circular(25),
           ),

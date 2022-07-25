@@ -27,7 +27,7 @@ class SignUpOption extends StatelessWidget {
         Container(
           height: 40,
           decoration: BoxDecoration(
-            color: Colors.teal.shade200,
+            color: Colors.white,
             borderRadius: BorderRadius.all(
               Radius.circular(25),
             ),
