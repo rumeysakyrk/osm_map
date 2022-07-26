@@ -1,36 +1,57 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart' as latLng;
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 
-class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
-
+class FoodieMap extends StatefulWidget {
   @override
-  State<MainPage> createState() => _MainPageState();
+  State<StatefulWidget> createState() {
+    return _FoodieMapState();
+  }
 }
 
-class _MainPageState extends State<MainPage> {
+class _FoodieMapState extends State<FoodieMap> {
+  late Future<Position> _currentLocation;
+  Set<Marker> _markers = {};
+
+  Future<void> init() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+  }
+
+  @override
+  void initState() {
+    init();
+    super.initState();
+    _currentLocation = Geolocator.getCurrentPosition();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body:FlutterMap(
-          options: MapOptions(
-            center: latLng.LatLng(51.5, -0.09),
-            zoom: 13.0,
-          ),
-          layers: [
-            TileLayerOptions(
-                urlTemplate: "https://api.mapbox.com/styles/v1/rmyskyrk/cl5weelpx000115pf8ryau9pp/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1Ijoicm15c2t5cmsiLCJhIjoiY2w1d2R6OXUyMDQ0cjNvb2FlandhOGNvdSJ9.tJ5Fa2XQUjvu9uxchxhlUg",
-                additionalOptions: {
-                  'accessToken':'pk.eyJ1Ijoicm15c2t5cmsiLCJhIjoiY2w1d2R6OXUyMDQ0cjNvb2FlandhOGNvdSJ9.tJ5Fa2XQUjvu9uxchxhlUg',
-                  'id':'mapbox://styles/rmyskyrk/cl5weelpx000115pf8ryau9pp'
-                }
-            ),
-            MarkerLayerOptions(
-
-            ),
-          ],
-        )
-    );
+    return FutureBuilder(
+        future: _currentLocation,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasData) {
+              // The user location returned from the snapshot
+              Position snapshotData = snapshot.data as Position;
+              LatLng _userLocation =
+              LatLng(snapshotData.latitude, snapshotData.longitude);
+              return GoogleMap(
+                initialCameraPosition: CameraPosition(
+                  target: _userLocation,
+                  zoom: 12,
+                ),
+                markers: _markers
+                  ..add(Marker(
+                      markerId: MarkerId("User Location"),
+                      infoWindow: InfoWindow(title: "User Location"),
+                      position: _userLocation)),
+              );
+            } else {
+              return Center(child: Text("Failed to get user location."));
+            }
+          }
+          // While the connection is not in the done state yet
+          return Center(child: CircularProgressIndicator());
+        });
   }
 }

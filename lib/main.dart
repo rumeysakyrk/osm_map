@@ -3,8 +3,10 @@ import 'package:maps_login_ui/login/signup_option.dart';
 import 'login/login.dart';
 import 'login/login_option.dart';
 import 'login/login_signup.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
@@ -28,7 +30,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
+  final Future<FirebaseApp> _ryapp = Firebase.initializeApp();
   bool login = true;
 
   @override

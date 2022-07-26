@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../database/authentication.dart';
+
 import '../main_page.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -18,6 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
     myController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -30,10 +33,8 @@ class _LoginScreenState extends State<LoginScreen> {
               fontSize: 16,
               color: Colors.black,
               height: 2,
-              fontWeight: FontWeight.w500
-          ),
+              fontWeight: FontWeight.w500),
         ),
-
         Text(
           "TRAVELAPP",
           style: TextStyle(
@@ -44,17 +45,14 @@ class _LoginScreenState extends State<LoginScreen> {
             height: 1,
           ),
         ),
-
         Text(
           "Please login to continue",
           style: TextStyle(
               fontSize: 16,
               color: Colors.black,
               height: 1,
-              fontWeight: FontWeight.w500
-          ),
+              fontWeight: FontWeight.w500),
         ),
-
         SizedBox(
           height: 16,
         ),
@@ -80,7 +78,9 @@ class _LoginScreenState extends State<LoginScreen> {
             contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
           ),
         ),
-       SizedBox(height: 16,),
+        SizedBox(
+          height: 16,
+        ),
         TextField(
           controller: myControllerPw,
           keyboardType: TextInputType.number,
@@ -108,7 +108,6 @@ class _LoginScreenState extends State<LoginScreen> {
         SizedBox(
           height: 24,
         ),
-
         Container(
           height: 40,
           decoration: BoxDecoration(
@@ -121,31 +120,50 @@ class _LoginScreenState extends State<LoginScreen> {
                 color: Colors.teal,
                 spreadRadius: 3,
                 blurRadius: 4,
-                offset: Offset(0,3),
+                offset: Offset(0, 3),
               ),
             ],
           ),
-          child:  Center(
-          child: TextButton(
-          child: Text(
-              "LOGIN",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-            onPressed: () { 
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage()));
-            },
-          ),
+          child: Center(
+            child: TextButton(
+                child: Text(
+                  "LOGIN",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                onPressed: () async {
+                  var signing = await Authentication()
+                      .logIn(myController.text, myControllerPw.text);
+                  print(signing);
+                  if (signing == 'true') {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return FoodieMap();
+                        },
+                      ),
+                      (route) => false,
+                    );
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          content: Text(signing),
+                        );
+                      },
+                    );
+                  }
+                }),
           ),
         ),
-
         SizedBox(
           height: 16,
         ),
-
         Text(
           "FORGOT PASSWORD?",
           style: TextStyle(
@@ -155,9 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
             height: 1,
           ),
         ),
-
       ],
     );
-
   }
 }

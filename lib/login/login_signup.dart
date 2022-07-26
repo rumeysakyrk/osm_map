@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-
+import 'package:maps_login_ui/main_page.dart';
+import '../dataBase/firestore_data.dart';
+import '../dataBase/authentication.dart';
+import '../model/users.dart';
 class Login_SignUp extends StatefulWidget
 {
   const Login_SignUp({Key? key}) : super(key: key);
@@ -159,7 +162,42 @@ class _Login_SignUpState extends State<Login_SignUp> {
                   color: Colors.black,
                 ),
               ),
-              onPressed: () {
+              onPressed: () async {
+                if (passwordEditingController.text ==
+                    confirmPasswordEditingController.text) {
+                  String signUpping = await Authentication()
+                      .signUp(emailEditingController.text,
+                      passwordEditingController.text);
+                  print(signUpping);
+                  if (signUpping == 'true') {
+                    Users user = Users( email: emailEditingController.text, password: passwordEditingController.text);
+                    FireStore().addUser(password: ' ', email: '');
+                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+                      builder: (context) {
+                        return FoodieMap();
+                      },
+                    ), (route) => false);
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          content: Text(signUpping),
+                        );
+                      },
+                    );
+                  }
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: Text(
+                            'The confirm password does not match\n\n  Make sure passwords are the same'),
+                      );
+                    },
+                  );
+                }
               }
           ),
         ),
@@ -170,4 +208,5 @@ class _Login_SignUpState extends State<Login_SignUp> {
   );
   }
 }
+
 

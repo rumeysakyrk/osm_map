@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "274467267504",
+    "project_id": "mytravelapp-denemesi",
+    "storage_bucket": "mytravelapp-denemesi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:274467267504:android:e2e4540714b651dad0ec75",
+        "android_client_info": {
+          "package_name": "com.example.maps_login_ui"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "274467267504-75hnkgb974apuagukag0oc6f9n1bpkvi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARFsicGP3aLR2QUckAJzXHGPcZ9GvKy7U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "274467267504-75hnkgb974apuagukag0oc6f9n1bpkvi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
