@@ -1,57 +1,58 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/src/foundation/key.dart';
+import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 
-class FoodieMap extends StatefulWidget {
+class MainPage extends StatefulWidget {
+  const MainPage({Key? key}) : super(key: key);
+
   @override
-  State<StatefulWidget> createState() {
-    return _FoodieMapState();
-  }
+  State<MainPage> createState() => _MainPageState();
 }
 
-class _FoodieMapState extends State<FoodieMap> {
-  late Future<Position> _currentLocation;
-  Set<Marker> _markers = {};
-
-  Future<void> init() async {
-    LocationPermission permission = await Geolocator.requestPermission();
-  }
+class _MainPageState extends State<MainPage> {
+  late MapController controller;
+  ValueNotifier<bool> trackingNotifier = ValueNotifier(false);
 
   @override
   void initState() {
-    init();
     super.initState();
-    _currentLocation = Geolocator.getCurrentPosition();
+    controller = MapController(
+      initMapWithUserPosition: true,
+      initPosition: GeoPoint(
+        latitude: 47.4358055,
+        longitude: 8.4737324,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: _currentLocation,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasData) {
-              // The user location returned from the snapshot
-              Position snapshotData = snapshot.data as Position;
-              LatLng _userLocation =
-              LatLng(snapshotData.latitude, snapshotData.longitude);
-              return GoogleMap(
-                initialCameraPosition: CameraPosition(
-                  target: _userLocation,
-                  zoom: 12,
-                ),
-                markers: _markers
-                  ..add(Marker(
-                      markerId: MarkerId("User Location"),
-                      infoWindow: InfoWindow(title: "User Location"),
-                      position: _userLocation)),
-              );
-            } else {
-              return Center(child: Text("Failed to get user location."));
-            }
+    return Scaffold(
+      body: OSMFlutter(
+        controller: controller,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          if (!trackingNotifier.value) {
+            await controller.currentLocation();
+            await controller.enableTracking();
+            //await controller.zoom(5.0);
+          } else {
+            await controller.disabledTracking();
           }
-          // While the connection is not in the done state yet
-          return Center(child: CircularProgressIndicator());
-        });
+          trackingNotifier.value = !trackingNotifier.value;
+        },
+        child: ValueListenableBuilder<bool>(
+          valueListenable: trackingNotifier,
+          builder: (ctx, isTracking, _) {
+            if (isTracking) {
+              return Icon(Icons.gps_off_sharp);
+            }
+            return Icon(Icons.my_location);
+          },
+        ),
+      ),
+    );
   }
 }

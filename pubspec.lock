@@ -64,6 +64,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.16.0"
+  crypto:
+    dependency: transitive
+    description:
+      name: crypto
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.2"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -71,6 +78,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
+  dio:
+    dependency: transitive
+    description:
+      name: dio
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.6"
   fake_async:
     dependency: transitive
     description:
@@ -160,6 +174,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.1"
+  flutter_osm_interface:
+    dependency: transitive
+    description:
+      name: flutter_osm_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.24"
+  flutter_osm_plugin:
+    dependency: "direct main"
+    description:
+      name: flutter_osm_plugin
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.37.2+2"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -184,6 +212,20 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  geocoding:
+    dependency: "direct main"
+    description:
+      name: geocoding
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.4"
+  geocoding_platform_interface:
+    dependency: transitive
+    description:
+      name: geocoding_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   geolocator:
     dependency: "direct main"
     description:
@@ -240,6 +282,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.1"
+  google_polyline_algorithm:
+    dependency: transitive
+    description:
+      name: google_polyline_algorithm
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.0"
   http:
     dependency: transitive
     description:
@@ -268,6 +317,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.4"
+  latlng:
+    dependency: "direct main"
+    description:
+      name: latlng
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0"
   latlong2:
     dependency: transitive
     description:
@@ -324,6 +380,41 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.1"
+  permission_handler:
+    dependency: transitive
+    description:
+      name: permission_handler
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "10.0.0"
+  permission_handler_android:
+    dependency: transitive
+    description:
+      name: permission_handler_android
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "10.0.0"
+  permission_handler_apple:
+    dependency: transitive
+    description:
+      name: permission_handler_apple
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "9.0.4"
+  permission_handler_platform_interface:
+    dependency: transitive
+    description:
+      name: permission_handler_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.7.0"
+  permission_handler_windows:
+    dependency: transitive
+    description:
+      name: permission_handler_windows
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   plugin_platform_interface:
     dependency: transitive
     description:
@@ -434,6 +525,69 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.1"
+  url_launcher:
+    dependency: transitive
+    description:
+      name: url_launcher
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.1.5"
+  url_launcher_android:
+    dependency: transitive
+    description:
+      name: url_launcher_android
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.0.17"
+  url_launcher_ios:
+    dependency: transitive
+    description:
+      name: url_launcher_ios
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.0.17"
+  url_launcher_linux:
+    dependency: transitive
+    description:
+      name: url_launcher_linux
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1"
+  url_launcher_macos:
+    dependency: transitive
+    description:
+      name: url_launcher_macos
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1"
+  url_launcher_platform_interface:
+    dependency: transitive
+    description:
+      name: url_launcher_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
+  url_launcher_web:
+    dependency: transitive
+    description:
+      name: url_launcher_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.12"
+  url_launcher_windows:
+    dependency: transitive
+    description:
+      name: url_launcher_windows
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1"
+  uuid:
+    dependency: transitive
+    description:
+      name: uuid
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.6"
   vector_math:
     dependency: transitive
     description:
@@ -450,4 +604,4 @@ packages:
     version: "2.0.0"
 sdks:
   dart: ">=2.18.0-24.0.dev <3.0.0"
-  flutter: ">=2.8.0"
+  flutter: ">=2.10.0"

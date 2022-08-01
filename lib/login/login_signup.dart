@@ -174,7 +174,7 @@ class _Login_SignUpState extends State<Login_SignUp> {
                     FireStore().addUser(password: ' ', email: '');
                     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
                       builder: (context) {
-                        return FoodieMap();
+                        return MainPage();
                       },
                     ), (route) => false);
                   } else {

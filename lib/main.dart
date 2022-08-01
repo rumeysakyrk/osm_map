@@ -4,7 +4,7 @@ import 'login/login.dart';
 import 'login/login_option.dart';
 import 'login/login_signup.dart';
 import 'package:firebase_core/firebase_core.dart';
-
+import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());

@@ -143,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) {
-                          return FoodieMap();
+                          return MainPage();
                         },
                       ),
                       (route) => false,
