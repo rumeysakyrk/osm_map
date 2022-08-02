@@ -20,20 +20,20 @@ class Authentication {
     } catch (e) {
       return e.toString() ==
           "[firebase_auth/unknown] Given String is empty or null"
-          ? "Given String is empty.\nFill The Blanks!"
+          ? "Verilen Dize boş.\nBoşlukları Doldurun!"
           : (e.toString() ==
           "[firebase_auth/invalid-email] The email address is badly formatted."
-          ? "e-mail address is formatted badly.\nTry it again!"
+          ? "E-posta adresi hatalı biçimlendirilmiş.\nTekrar deneyin!"
           : (e.toString() ==
           "[firebase_auth/wrong-password] The password is invalid or the user does not have a password."
-          ? "The password is invalid or the user does not have a password!"
+          ? "Parola geçersiz veya kullanıcının parolası yok!"
           : (e.toString() ==
           "[firebase_auth/user-not-found] There is no user record corresponding to this identifier. The user may have been deleted."
-          ? "There is no user record corresponding to this identifier.\n\nThe user may have been deleted!"
+          ? "Bu tanımlayıcıya karşılık gelen kullanıcı kaydı yok.\n\nKullanıcı silinmiş olabilir!"
           : (e.toString() ==
           "[firebase_auth/too-many-requests] We have blocked all requests from this device due to unusual activity. Try again later."
-          ? "We have blocked all requests from this device due to unusual activity.\n\nTry again later!!"
-          : "Something went wrong.\n\nTry again!!"))));
+          ? "Olağandışı etkinlik nedeniyle bu cihazdan gelen tüm istekleri engelledik.\n\nDaha sonra tekrar deneyin!!"
+          : "Bir şeyler ters gitti.\n\nTekrar deneyin!!"))));
     }
   }
 
@@ -44,9 +44,9 @@ class Authentication {
       return 'true';
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        return 'Weak password, try stronger one';
+        return 'Zayıf şifre, daha güçlü bir şifre deneyin!';
       } else if (e.code == 'email-already-in-use') {
-        return 'The e-mail has been used before';
+        return 'E-posta daha önce kullanılmış.';
       } else {
         return e.message!;
       }
@@ -62,20 +62,20 @@ class Authentication {
     } catch (e) {
       return e.toString() ==
           "[firebase_auth/unknown] Given String is empty or null"
-          ? "Given String is empty.\nFill The Blanks!"
+          ? "Verilen Dize boş.\nBoşlukları Doldurun!"
           : (e.toString() ==
           "[firebase_auth/invalid-email] The email address is badly formatted."
-          ? "e-mail address is formatted badly.\nTry it again!"
+          ? "E-posta adresi hatalı biçimlendirilmiş.\nTekrar deneyin!"
           : (e.toString() ==
           "[firebase_auth/wrong-password] The password is invalid or the user does not have a password."
-          ? "The password is invalid or the user does not have a password!"
+          ? "Parola geçersiz veya kullanıcının parolası yok!"
           : (e.toString() ==
           "[firebase_auth/user-not-found] There is no user record corresponding to this identifier. The user may have been deleted."
-          ? "There is no user record corresponding to this identifier.\n\nThe user may have been deleted!"
+          ? "Bu tanımlayıcıya karşılık gelen kullanıcı kaydı yok.\n\nKullanıcı silinmiş olabilir!"
           : (e.toString() ==
           "[firebase_auth/too-many-requests] We have blocked all requests from this device due to unusual activity. Try again later."
-          ? "We have blocked all requests from this device due to unusual activity.\n\nTry again later!!"
-          : "Something went wrong.\n\nTry again!!"))));
+          ? "Olağandışı etkinlik nedeniyle bu cihazdan gelen tüm istekleri engelledik.\n\nDaha sonra tekrar deneyin!!"
+          : "Bir şeyler ters gitti.\n\nTekrar deneyin!!"))));
     }
   }
 

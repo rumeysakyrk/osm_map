@@ -28,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
-          "Welcome to",
+          "Hoşgeldiniz",
           style: TextStyle(
               fontSize: 16,
               color: Colors.black,
@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         Text(
-          "Please login to continue",
+          "Devam etmek için lütfen giriş yapınız",
           style: TextStyle(
               fontSize: 16,
               color: Colors.black,
@@ -60,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
           controller: myController,
           autofocus: false,
           decoration: InputDecoration(
-            hintText: 'Email',
+            hintText: 'E-Mail',
             hintStyle: TextStyle(
               fontSize: 16,
               color: Colors.black,
@@ -87,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
           obscureText: true,
           autofocus: false,
           decoration: InputDecoration(
-            hintText: 'Password',
+            hintText: 'Şifre',
             hintStyle: TextStyle(
               fontSize: 16,
               color: Colors.black,
@@ -127,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Center(
             child: TextButton(
                 child: Text(
-                  "LOGIN",
+                  "GİRİŞ",
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -165,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
           height: 16,
         ),
         Text(
-          "FORGOT PASSWORD?",
+          "Şifreni mi Unuttun?",
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,

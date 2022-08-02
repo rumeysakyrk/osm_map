@@ -28,7 +28,7 @@ class _Login_SignUpState extends State<Login_SignUp> {
     },
     textInputAction: TextInputAction.next,
     decoration: InputDecoration(
-      hintText: 'Email',
+      hintText: 'E-Mail',
       hintStyle: TextStyle(
         fontSize: 16,
         color: Colors.black,
@@ -57,7 +57,7 @@ class _Login_SignUpState extends State<Login_SignUp> {
     },
     textInputAction: TextInputAction.next,
     decoration: InputDecoration(
-      hintText: 'Password',
+      hintText: 'Şifre',
       hintStyle: TextStyle(
         fontSize: 16,
         color: Colors.black,
@@ -85,7 +85,7 @@ class _Login_SignUpState extends State<Login_SignUp> {
     },
     textInputAction: TextInputAction.next,
     decoration: InputDecoration(
-      hintText: 'Confirm Pasword',
+      hintText: 'Şifre(Tekrar)',
       hintStyle: TextStyle(
         fontSize: 16,
         color: Colors.black,
@@ -108,7 +108,7 @@ class _Login_SignUpState extends State<Login_SignUp> {
     mainAxisAlignment: MainAxisAlignment.center,
     children: <Widget>[
       Text(
-        "Sign up with",
+        "Hesap oluştur",
         style: TextStyle(
             fontSize: 16,
             color: Colors.black,
@@ -155,7 +155,7 @@ class _Login_SignUpState extends State<Login_SignUp> {
         child: Center(
           child: TextButton(
               child: Text(
-                "SIGN UP",
+                "Kayıt Ol",
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -193,7 +193,7 @@ class _Login_SignUpState extends State<Login_SignUp> {
                     builder: (context) {
                       return AlertDialog(
                         content: Text(
-                            'The confirm password does not match\n\n  Make sure passwords are the same'),
+                            'Onay şifresi eşleşmiyor.\n\n Şifrelerin aynı olduğundan emin olun.'),
                       );
                     },
                   );

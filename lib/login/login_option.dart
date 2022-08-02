@@ -9,7 +9,7 @@ class LoginOption extends StatelessWidget {
       children: <Widget>[
 
         Text(
-          "Existing user?",
+          "Hesabın var mı?",
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w500
@@ -38,7 +38,7 @@ class LoginOption extends StatelessWidget {
           ),
           child:  Center(
             child: Text(
-              "LOGIN",
+              "GİRİŞ",
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,

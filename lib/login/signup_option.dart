@@ -10,7 +10,7 @@ class SignUpOption extends StatelessWidget {
       children: <Widget>[
 
         Text(
-          "OR",
+          "YA DA",
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 24,
@@ -42,7 +42,7 @@ class SignUpOption extends StatelessWidget {
           ),
           child:  Center(
             child: Text(
-              "SIGN UP",
+              "KAYIT OL",
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
