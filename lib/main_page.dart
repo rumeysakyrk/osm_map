@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'dart:math';
+
+import 'main.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -15,6 +18,10 @@ class _MainPageState extends State<MainPage> {
   double value = 0;
   late MapController controller;
   ValueNotifier<bool> trackingNotifier = ValueNotifier(false);
+
+  Future<void> _signOut() async {
+    await FirebaseAuth.instance.signOut();
+  }
 
   @override
   void initState() {
@@ -38,8 +45,12 @@ class _MainPageState extends State<MainPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('sağa doğru çekiniz')),
+              child: TextButton(onPressed: (){
+                setState((){
+                  value=(value+1)%2;
+                });
+              }, child: Icon(Icons.menu_outlined,size: 30,color: Colors.white,),),
+            ),
           ],
         ),
       ),
@@ -109,12 +120,20 @@ class _MainPageState extends State<MainPage> {
                   child: ListView(
                 children: [
                   ListTile(
-                    onTap: () {},
-                    leading: Icon(
-                      Icons.logout,
-                      color: Colors.black,
-                    ),
-                    title: Text("Çıkış",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500)),
+                      onTap: () {},
+                      leading: Icon(
+                        Icons.logout,
+                        color: Colors.black,
+                      ),
+                      title: TextButton(child:Text("Çıkış",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500)),onPressed: (){
+                        _signOut();
+                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+                          builder: (context) {
+                            return HomePage();
+                          },
+                        ), (route) => false);
+                      },
+                      )
                   )
                 ],
               ))
@@ -161,19 +180,6 @@ class _MainPageState extends State<MainPage> {
                 ),
               );
             }),
-        GestureDetector(
-          onHorizontalDragUpdate: (e) {
-            if (e.delta.dx > 0) {
-              setState(() {
-                value = 1;
-              });
-            } else {
-              setState(() {
-                value = 0;
-              });
-            }
-          },
-        )
       ]),
     );
   }

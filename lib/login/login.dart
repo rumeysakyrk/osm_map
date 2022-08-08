@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../database/authentication.dart';
 
 import '../main_page.dart';
+import 'forgot_password.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -164,13 +165,22 @@ class _LoginScreenState extends State<LoginScreen> {
         SizedBox(
           height: 16,
         ),
-        Text(
-          "Şifreni mi Unuttun?",
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-            height: 1,
+        TextButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ForgotPassword()));
+          },
+          child: const Text(
+            'Şifreni mi Unuttun?',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+              height: 1,
+            ),
           ),
         ),
       ],
