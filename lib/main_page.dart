@@ -21,6 +21,8 @@ class _MainPageState extends State<MainPage> {
   ValueNotifier<bool> showFab = ValueNotifier(true);
   late GlobalKey<ScaffoldState> scaffoldKey;
 
+  bool hasRoad = false;
+
   late TextEditingController textEditingController = TextEditingController();
   ValueNotifier<GeoPoint?> notifierGeoPoint = ValueNotifier(null);
   ValueNotifier<bool> notifierAutoCompletion = ValueNotifier(false);
@@ -115,6 +117,7 @@ class _MainPageState extends State<MainPage> {
             .inMinutes
             .toString();
         Km = roadInformation.distance!.floorToDouble().toString();
+        hasRoad = true;
       });
 
       print(
@@ -130,6 +133,16 @@ class _MainPageState extends State<MainPage> {
         ),
       );
     }
+  }
+  void deleteRoad(GeoPoint point1, GeoPoint point2) async {
+    await controller.removeLastRoad();
+    showFab.value = true;
+    controller.removeMarker(point1);
+    controller.removeMarker(point2);
+
+    setState(() {
+      hasRoad = false;
+    });
   }
 
   int count = 0;
@@ -148,6 +161,7 @@ class _MainPageState extends State<MainPage> {
             child: Column(
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
                       onPressed: () { setState(() {
@@ -159,6 +173,20 @@ class _MainPageState extends State<MainPage> {
                         color: Colors.white,
                       ),
                     ),
+                    IconButton(
+                      onPressed: () {
+                        _signOut();
+                        Navigator.pushAndRemoveUntil(context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return HomePage();
+                              },
+                            ), (route) => false);
+                      },
+                      icon:const Icon(
+                        Icons.logout
+                      )
+                    )
 
                   ],
                 ),
@@ -275,85 +303,53 @@ class _MainPageState extends State<MainPage> {
               ),
               SizedBox(height: 20,),
               Expanded(
-                child: StreamBuilder<List<SearchInfo>>(
-                  stream: streamSuggestion.stream,
-                  key: streamKey,
-                  builder: (ctx, snap) {
-                    if (snap.hasData) {
-                      return ListView.builder(
-                        itemExtent: 50.0,
-                        itemBuilder: (ctx, index) {
-                          return ListTile(
-                            title: Text(
-                              snap.data![index].address.toString(),
-                              maxLines: 1,
-                              overflow: TextOverflow.fade,
-                            ),
-                            onTap: () async {
-                              if (count < 2) {
-                                if (count == 1) {
-                                  point1 = snap.data![index].point!;
-                                } else {
-                                  point2 = snap.data![index].point!;
-                                }
-                                count++;
-                                controller
-                                    .addMarker(snap.data![index].point!);
-                                controller.goToLocation(
-                                  snap.data![index].point!,
-                                );
-                                controller.setZoom(zoomLevel: 20);
+                child:  StreamBuilder<List<SearchInfo>>(
+                    stream: streamSuggestion.stream,
+                    key: streamKey,
+                    builder: (ctx, snap) {
+                      if (snap.hasData) {
+                        return ListView.builder(
+                          itemExtent: 50.0,
+                          itemBuilder: (ctx, index) {
+                            return ListTile(
+                              title: Text(
+                                snap.data![index].address.toString(),
+                                maxLines: 1,
+                                overflow: TextOverflow.fade,
+                              ),
+                              onTap: () async {
+                                if (count < 2) {
+                                  if (count == 1) {
+                                    point1 = snap.data![index].point!;
+                                  } else {
+                                    point2 = snap.data![index].point!;
+                                  }
 
-                                /// hide suggestion card
-                                notifierAutoCompletion.value = false;
-                                await reInitStream();
-                                FocusScope.of(context).requestFocus(
-                                  new FocusNode(),
-                                );
-                              }
-                            },
-                          );
-                        },
-                        itemCount: snap.data!.length,
-                      );
-                    }
-                    if (snap.connectionState == ConnectionState.waiting) {
-                      return Card(
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      );
-                    }
-                    return SizedBox();
+                                  count++;
+                                  controller
+                                      .addMarker(snap.data![index].point!);
+                                  controller.goToLocation(
+                                    snap.data![index].point!,
+                                  );
+                                  controller.setZoom(zoomLevel: 20);
+
+                                  /// hide suggestion card
+                                  notifierAutoCompletion.value = false;
+                                  await reInitStream();
+                                  FocusScope.of(context).requestFocus(
+                                    new FocusNode(),
+                                  );
+                                }
+                              },
+                            );
+                          },
+                          itemCount: snap.data!.length,
+                        );
+                      }
+                      return SizedBox();
                   }
                 ),
               ),
-              SizedBox(height: 20,),
-              Expanded(
-                  child: ListView(
-                children: [
-                  ListTile(
-                      onTap: () {},
-                      leading: Icon(
-                        Icons.logout,
-                        color: Colors.black,
-                      ),
-                      title: TextButton(
-                        child: Text("Çıkış",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w500,color:Colors.black)),
-                        onPressed: () {
-                          _signOut();
-                          Navigator.pushAndRemoveUntil(context,
-                              MaterialPageRoute(
-                            builder: (context) {
-                              return HomePage();
-                            },
-                          ), (route) => false);
-                        },
-                      ))
-                ],
-              ))
             ],
           ),
         )),
@@ -381,21 +377,29 @@ class _MainPageState extends State<MainPage> {
                   floatingActionButton: FloatingActionButton(
                     backgroundColor: Colors.teal,
                     onPressed: () async {
-                      if (!trackingNotifier.value) {
-                        await controller.currentLocation();
-                        await controller.enableTracking();
+                      if (!hasRoad) {
+                        if (!trackingNotifier.value) {
+                          await controller.currentLocation();
+                          await controller.enableTracking();
+                        } else {
+                          await controller.disabledTracking();
+                        }
+                        trackingNotifier.value = !trackingNotifier.value;
                       } else {
-                        await controller.disabledTracking();
+                        deleteRoad(point1, point2);
+                        count = 0;
                       }
-                      trackingNotifier.value = !trackingNotifier.value;
                     },
                     child: ValueListenableBuilder<bool>(
                       valueListenable: trackingNotifier,
                       builder: (ctx, isTracking, _) {
-                        if (isTracking) {
-                          return const Icon(Icons.gps_off_sharp);
+                        if (!hasRoad) {
+                          if (isTracking) {
+                            return const Icon(Icons.gps_off_sharp);
+                          }
+                          return const Icon(Icons.my_location);
                         }
-                        return const Icon(Icons.my_location);
+                        return const Icon(Icons.clear);
                       },
                     ),
                   ),
