@@ -370,6 +370,25 @@ class _MainPageState extends State<MainPage> {
                       Expanded(
                         child: OSMFlutter(
                           controller: controller,
+                          trackMyPosition: true,
+                          minZoomLevel : 2,
+                          maxZoomLevel : 18,
+                          userLocationMarker: UserLocationMaker(
+                            personMarker: MarkerIcon(
+                              icon: Icon(
+                                Icons.cached,
+                                color: Colors.red,
+                                size: 70,
+                              ),
+                            ),
+                            directionArrowMarker: MarkerIcon(
+                              icon: Icon(
+                                Icons.location_history_rounded,
+                                color: Colors.red,
+                                size: 70,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ],

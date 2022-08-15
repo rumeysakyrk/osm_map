@@ -165,23 +165,52 @@ class _LoginScreenState extends State<LoginScreen> {
         SizedBox(
           height: 16,
         ),
-        TextButton(
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        ForgotPassword()));
-          },
-          child: const Text(
-            'Şifreni mi Unuttun?',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              height: 1,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            ForgotPassword()));
+              },
+              child: const Text(
+                'Şifreni mi Unuttun?',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  height: 1,
+                ),
+              ),
             ),
-          ),
+            TextButton(
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return MainPage();
+                    },
+                  ),
+                      (route) => false,
+                );;
+              },
+              child: const Text(
+                'Kayıt olmadan Giriş',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  height: 1,
+                ),
+              ),
+            ),
+
+
+          ],
         ),
       ],
     );
