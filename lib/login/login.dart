@@ -75,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             filled: true,
-            fillColor: Colors.teal.shade200,
+            fillColor: Colors.lightGreen.shade200,
             contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
           ),
         ),
@@ -102,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             filled: true,
-            fillColor: Colors.teal.shade200,
+            fillColor: Colors.lightGreen.shade200,
             contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
           ),
         ),
@@ -112,13 +112,13 @@ class _LoginScreenState extends State<LoginScreen> {
         Container(
           height: 40,
           decoration: BoxDecoration(
-            color: Colors.teal.shade200,
+            color: Colors.lightGreen.shade200,
             borderRadius: BorderRadius.all(
               Radius.circular(25),
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.teal,
+                color: Colors.lightGreen,
                 spreadRadius: 3,
                 blurRadius: 4,
                 offset: Offset(0, 3),

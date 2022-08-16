@@ -23,13 +23,13 @@ class LoginOption extends StatelessWidget {
         Container(
           height: 40,
           decoration: BoxDecoration(
-            color: Colors.teal.shade200,
+            color: Colors.lightGreen.shade200,
             borderRadius: BorderRadius.all(
               Radius.circular(25),
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.teal,
+                color: Colors.lightGreen,
                 spreadRadius: 3,
                 blurRadius: 4,
                 offset: Offset(0, 3),

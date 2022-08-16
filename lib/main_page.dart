@@ -142,6 +142,8 @@ class _MainPageState extends State<MainPage> {
 
     setState(() {
       hasRoad = false;
+      Km = "-";
+      duration = "-";
     });
   }
 
@@ -149,13 +151,15 @@ class _MainPageState extends State<MainPage> {
   late String duration = "-", Km = "-";
   GeoPoint point1 = GeoPoint(latitude: 42, longitude: 40);
   GeoPoint point2 = GeoPoint(latitude: 42, longitude: 40);
+  String address1="";
+  String address2="";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 130.0,
-        backgroundColor: Colors.teal,
+        backgroundColor: Colors.lightGreen.shade300,
         actions: [
           Flexible(
             child: Column(
@@ -221,7 +225,7 @@ class _MainPageState extends State<MainPage> {
         Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(
-            colors: [Colors.white, Colors.teal],
+            colors: [Colors.white, Colors.lightGreen.shade300],
             begin: Alignment.bottomCenter,
             end: Alignment.topCenter,
           )),
@@ -273,7 +277,7 @@ class _MainPageState extends State<MainPage> {
                     ),
                   ),
                   filled: true,
-                  fillColor: Colors.teal.shade200,
+                  fillColor: Colors.lightGreen.shade300,
                   contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                   suffix: ValueListenableBuilder<TextEditingValue>(
                     valueListenable: textEditingController,
@@ -319,13 +323,25 @@ class _MainPageState extends State<MainPage> {
                               ),
                               onTap: () async {
                                 if (count < 2) {
-                                  if (count == 1) {
+                                  if (count == 0) {
+                                    setState(() {
+                                      address1 =
+                                          snap.data![index].address.toString();
+                                    });
+
                                     point1 = snap.data![index].point!;
-                                  } else {
+                                  } else if (count==1) {
+                                    setState(() {
+                                      address2 =
+                                          snap.data![index].address.toString();
+                                    });
+
                                     point2 = snap.data![index].point!;
                                   }
+                                  setState(() {
+                                    count++;
+                                  });
 
-                                  count++;
                                   controller
                                       .addMarker(snap.data![index].point!);
                                   controller.goToLocation(
@@ -337,7 +353,7 @@ class _MainPageState extends State<MainPage> {
                                   notifierAutoCompletion.value = false;
                                   await reInitStream();
                                   FocusScope.of(context).requestFocus(
-                                    new FocusNode(),
+                                    FocusNode(),
                                   );
                                 }
                               },
@@ -346,13 +362,13 @@ class _MainPageState extends State<MainPage> {
                           itemCount: snap.data!.length,
                         );
                       }
-                      return SizedBox();
-                  }
-                ),
+                      return const SizedBox();
+                    }),
               ),
             ],
           ),
-        )),
+            )),
+
         TweenAnimationBuilder(
             curve: Curves.easeIn,
             tween: Tween<double>(begin: 0, end: value),
@@ -370,7 +386,7 @@ class _MainPageState extends State<MainPage> {
                       Expanded(
                         child: OSMFlutter(
                           controller: controller,
-                          trackMyPosition: true,
+                          trackMyPosition: false,
                           minZoomLevel : 2,
                           maxZoomLevel : 18,
                           userLocationMarker: UserLocationMaker(
@@ -391,10 +407,62 @@ class _MainPageState extends State<MainPage> {
                           ),
                         ),
                       ),
+                      count >= 1
+                          ? Row(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  value = 1;
+                                  textEditingController.text = address1;
+                                });
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.amber[50],
+                                    border:
+                                    Border.all(color: Colors.black)),
+                                child: Text(
+                                  address1,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(fontSize: 24),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  value = 1;
+                                  textEditingController.text = address2;
+                                  count=1;
+                                  controller.removeMarker(point2);
+                                });
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.amber[50],
+                                    border:
+                                    Border.all(color: Colors.black)),
+                                child: Text(
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  count == 2 ? address2 : "",
+                                  style: const TextStyle(fontSize: 24),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                          : const Text(""),
                     ],
                   ),
                   floatingActionButton: FloatingActionButton(
-                    backgroundColor: Colors.teal,
+                    backgroundColor: Colors.lightGreen.shade300,
                     onPressed: () async {
                       if (!hasRoad) {
                         if (!trackingNotifier.value) {
