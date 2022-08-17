@@ -116,7 +116,7 @@ class _Login_SignUpState extends State<Login_SignUp> {
             fontWeight: FontWeight.w500),
       ),
       Text(
-        "TRAVELAPP",
+        "maPolestar",
         style: TextStyle(
           fontSize: 36,
           fontWeight: FontWeight.bold,

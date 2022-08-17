@@ -37,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
               fontWeight: FontWeight.w500),
         ),
         Text(
-          "TRAVELAPP",
+          "maPolestar",
           style: TextStyle(
             fontSize: 36,
             fontWeight: FontWeight.bold,

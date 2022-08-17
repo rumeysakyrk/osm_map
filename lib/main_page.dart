@@ -250,7 +250,7 @@ class _MainPageState extends State<MainPage> {
                       height: 10.0,
                     ),
                     Text(
-                      "TravelApp",
+                      "maPolestar",
                       style: TextStyle(
                           fontSize: 20,
                           color: Colors.black,
@@ -291,6 +291,7 @@ class _MainPageState extends State<MainPage> {
                       focusNode: FocusNode(),
                       onTap: () {
                         textEditingController.clear();
+
                         FocusScope.of(context)
                             .requestFocus(new FocusNode());
                       },
@@ -323,14 +324,22 @@ class _MainPageState extends State<MainPage> {
                               ),
                               onTap: () async {
                                 if (count < 2) {
-                                  if (count == 0) {
+                                  if (count == -5) {
+                                    setState(() {
+                                      controller.removeMarker(point1);
+                                      address1 =
+                                          snap.data![index].address.toString();
+                                    });
+                                    count = 1;
+                                    point1 = snap.data![index].point!;
+                                  } else if (count == 0) {
                                     setState(() {
                                       address1 =
                                           snap.data![index].address.toString();
                                     });
 
                                     point1 = snap.data![index].point!;
-                                  } else if (count==1) {
+                                  } else {
                                     setState(() {
                                       address2 =
                                           snap.data![index].address.toString();
@@ -368,7 +377,7 @@ class _MainPageState extends State<MainPage> {
             ],
           ),
             )),
-
+// vazgeçtim şifreyi zaten göstermiştimn şimdi uğraşasım gelmedi çalışıyor hala orası videomuzun sonuna gelmiş bulunmaktayız yess burada konumum bu kadar işte en son hali bu şekilde ve eng bir hata :)) neyseki burası türkçe amaan
         TweenAnimationBuilder(
             curve: Curves.easeIn,
             tween: Tween<double>(begin: 0, end: value),
@@ -414,8 +423,8 @@ class _MainPageState extends State<MainPage> {
                             child: GestureDetector(
                               onTap: () {
                                 setState(() {
+                                  count = -5;
                                   value = 1;
-                                  textEditingController.text = address1;
                                 });
                               },
                               child: Container(
@@ -437,7 +446,6 @@ class _MainPageState extends State<MainPage> {
                               onTap: () {
                                 setState(() {
                                   value = 1;
-                                  textEditingController.text = address2;
                                   count=1;
                                   controller.removeMarker(point2);
                                 });
@@ -450,7 +458,7 @@ class _MainPageState extends State<MainPage> {
                                 child: Text(
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  count == 2 ? address2 : "",
+                                  count == 2 || count == -5 ? address2 : "" ,
                                   style: const TextStyle(fontSize: 24),
                                 ),
                               ),
@@ -459,7 +467,7 @@ class _MainPageState extends State<MainPage> {
                         ],
                       )
                           : const Text(""),
-                    ],
+                    ],//yüklenmiyor bazen çok sinir bozucu ayyh yazamaadım neyse oluyor sen biliyorsun :))
                   ),
                   floatingActionButton: FloatingActionButton(
                     backgroundColor: Colors.lightGreen.shade300,
