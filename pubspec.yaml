@@ -45,6 +45,7 @@ dependencies:
   geocoding: ^2.0.4
   latlng: ^0.2.0
   flutter_osm_plugin: ^0.37.2+2
+  provider: ^6.0.3
 
 
 dev_dependencies:

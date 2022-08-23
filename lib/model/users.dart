@@ -5,6 +5,6 @@ class Users {
 
   Users({
     this.email,
-this.password
+this.password,
   });
 }

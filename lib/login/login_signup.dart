@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:maps_login_ui/main_page.dart';
 import '../dataBase/firestore_data.dart';
@@ -172,6 +173,12 @@ class _Login_SignUpState extends State<Login_SignUp> {
                   if (signUpping == 'true') {
                     Users user = Users( email: emailEditingController.text, password: passwordEditingController.text);
                     FireStore().addUser(password: ' ', email: '');
+                    FirebaseFirestore.instance.collection('rotalar').doc(Authentication().userUID).set({
+                      'favoriler':{
+                        "point1":GeoPoint(1,2),
+                        "point2":GeoPoint(3,5)
+                      }
+                    });
                     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
                       builder: (context) {
                         return MainPage();
