@@ -5,7 +5,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'dart:math';
-import 'MenuPage.dart';
+import 'favoriPage.dart';
 import 'main.dart';
 
 class MainPage extends StatefulWidget {
@@ -17,6 +17,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   double value = 0;
+  bool chooseButton = true;
   late MapController controller;
   ValueNotifier<bool> trackingNotifier = ValueNotifier(false);
   ValueNotifier<bool> showFab = ValueNotifier(true);
@@ -172,21 +173,16 @@ class _MainPageState extends State<MainPage> {
                     IconButton(
                       onPressed: () {
                         setState(() {
-                          Navigator.pushAndRemoveUntil(context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return MenuPage();
-                                },
-                              ), (route) => false);
+                          value = (value + 1) % 2;
+                          chooseButton = true;
                         });
                       },
                       icon: const Icon(
-                        Icons.menu_outlined,
+                        Icons.search_rounded,
                         size: 25,
                         color: Colors.white,
                       ),
                     ),
-
                     SizedBox(
                       width: 40,
                     ),
@@ -214,10 +210,11 @@ class _MainPageState extends State<MainPage> {
                       onPressed: () {
                         setState(() {
                           value = (value + 1) % 2;
+                          chooseButton = false;
                         });
                       },
                       icon: const Icon(
-                        Icons.search_rounded,
+                        Icons.menu_outlined,
                         size: 25,
                         color: Colors.white,
                       ),
@@ -247,16 +244,9 @@ class _MainPageState extends State<MainPage> {
                     ),
                     IconButton(
                         onPressed: () {
-                          _signOut();
-                          Navigator.pushAndRemoveUntil(context,
-                              MaterialPageRoute(
-                            builder: (context) {
-                              return HomePage();
-                            },
-                          ), (route) => false);
                         },
                         icon: const Icon(
-                          Icons.logout,
+                          Icons.star_border_outlined,
                           size: 25,
                           color: Colors.white,
                         )),
@@ -278,9 +268,9 @@ class _MainPageState extends State<MainPage> {
         ),
         SafeArea(
             child: Container(
-          width: 200,
-          padding: EdgeInsets.all(8.0),
-          child:  Column(
+                width: 200,
+                padding: EdgeInsets.all(8.0),
+                child: Column(
                   children: [
                     DrawerHeader(
                       child: Column(
@@ -295,54 +285,85 @@ class _MainPageState extends State<MainPage> {
                         ],
                       ),
                     ),
-                    TextField(
-                      controller: textEditingController,
-                      onEditingComplete: () async {
-                        FocusScope.of(context).requestFocus(new FocusNode());
-                      },
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: Colors.black,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25),
-                          borderSide: BorderSide(
-                            width: 0,
-                            style: BorderStyle.none,
-                          ),
-                        ),
-                        filled: true,
-                        fillColor: Colors.lightGreen.shade300,
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                        suffix: ValueListenableBuilder<TextEditingValue>(
-                          valueListenable: textEditingController,
-                          builder: (ctx, text, child) {
-                            if (text.text.isNotEmpty) {
-                              return child!;
-                            }
-                            return SizedBox.shrink();
-                          },
-                          child: InkWell(
-                            focusNode: FocusNode(),
-                            onTap: () {
-                              textEditingController.clear();
-
+                    chooseButton == true
+                        ? TextField(
+                            controller: textEditingController,
+                            onEditingComplete: () async {
                               FocusScope.of(context)
                                   .requestFocus(new FocusNode());
                             },
-                            child: Icon(
-                              Icons.close,
-                              size: 16,
-                              color: Colors.black,
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(
+                                Icons.search,
+                                color: Colors.black,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25),
+                                borderSide: BorderSide(
+                                  width: 0,
+                                  style: BorderStyle.none,
+                                ),
+                              ),
+                              filled: true,
+                              fillColor: Colors.lightGreen.shade300,
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 0),
+                              suffix: ValueListenableBuilder<TextEditingValue>(
+                                valueListenable: textEditingController,
+                                builder: (ctx, text, child) {
+                                  if (text.text.isNotEmpty) {
+                                    return child!;
+                                  }
+                                  return SizedBox.shrink();
+                                },
+                                child: InkWell(
+                                  focusNode: FocusNode(),
+                                  onTap: () {
+                                    textEditingController.clear();
+
+                                    FocusScope.of(context)
+                                        .requestFocus(new FocusNode());
+                                  },
+                                  child: Icon(
+                                    Icons.close,
+                                    size: 16,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                              focusColor: Colors.black,
+                              hintText: "Ara",
+                            ),
+                          )
+                        : Expanded(
+                            child: ListView(
+                              padding: EdgeInsets.zero,
+                              children: <Widget>[
+                                ListTile(
+                                  leading: Icon(Icons.favorite),
+                                  title: Text('Favori Rotalar'),
+                                  onTap: () => {Navigator.of(context).pop()},
+                                ),
+                                ListTile(
+                                  leading: Icon(Icons.star),
+                                  title: Text('Gidilecek Rotalar',),
+                                  onTap: () => {Navigator.of(context).pop()},
+                                ),
+                                ListTile(
+                                  leading: Icon(Icons.exit_to_app),
+                                  title: Text('Çıkış'),
+                                  onTap: () {_signOut();
+                                  Navigator.pushAndRemoveUntil(context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return HomePage();
+                                        },
+                                      ), (route) => false);
+                                  },
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-                        focusColor: Colors.black,
-                        hintText: "Ara",
-                      ),
-                    ),
                     SizedBox(
                       height: 20,
                     ),
@@ -352,66 +373,77 @@ class _MainPageState extends State<MainPage> {
                           key: streamKey,
                           builder: (ctx, snap) {
                             if (snap.hasData) {
-                              return ListView.builder(
-                                itemExtent: 50.0,
-                                itemBuilder: (ctx, index) {
-                                  return ListTile(
-                                    title: Text(
-                                      snap.data![index].address.toString(),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.fade,
-                                    ),
-                                    onTap: () async {
-                                      if (count < 2) {
-                                        if (count == -5) {
-                                          setState(() {
-                                            controller.removeMarker(point1);
-                                            address1 = snap.data![index].address
-                                                .toString();
-                                          });
-                                          count = 1;
-                                          point1 = snap.data![index].point!;
-                                        } else if (count == 0) {
-                                          setState(() {
-                                            address1 = snap.data![index].address
-                                                .toString();
-                                          });
-                                          point1 = snap.data![index].point!;
-                                        } else {
-                                          setState(() {
-                                            address2 = snap.data![index].address
-                                                .toString();
-                                          });
-                                          point2 = snap.data![index].point!;
-                                        }
-                                        setState(() {
-                                          count++;
-                                        });
-                                        controller.addMarker(
-                                            snap.data![index].point!);
-                                        controller.goToLocation(
-                                          snap.data![index].point!,
-                                        );
-                                        controller.setZoom(zoomLevel: 20);
+                              return chooseButton == true
+                                  ? ListView.builder(
+                                      itemExtent: 50.0,
+                                      itemBuilder: (ctx, index) {
+                                        return ListTile(
+                                          title: Text(
+                                            snap.data![index].address
+                                                .toString(),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.fade,
+                                          ),
+                                          onTap: () async {
+                                            if (count < 2) {
+                                              if (count == -5) {
+                                                setState(() {
+                                                  controller
+                                                      .removeMarker(point1);
+                                                  address1 = snap
+                                                      .data![index].address
+                                                      .toString();
+                                                });
+                                                count = 1;
+                                                point1 =
+                                                    snap.data![index].point!;
+                                              } else if (count == 0) {
+                                                setState(() {
+                                                  address1 = snap
+                                                      .data![index].address
+                                                      .toString();
+                                                });
+                                                point1 =
+                                                    snap.data![index].point!;
+                                              } else {
+                                                setState(() {
+                                                  address2 = snap
+                                                      .data![index].address
+                                                      .toString();
+                                                });
+                                                point2 =
+                                                    snap.data![index].point!;
+                                              }
+                                              setState(() {
+                                                count++;
+                                              });
+                                              controller.addMarker(
+                                                  snap.data![index].point!);
+                                              controller.goToLocation(
+                                                snap.data![index].point!,
+                                              );
+                                              controller.setZoom(zoomLevel: 20);
 
-                                        notifierAutoCompletion.value = false;
-                                        await reInitStream();
-                                        FocusScope.of(context).requestFocus(
-                                          FocusNode(),
+                                              notifierAutoCompletion.value =
+                                                  false;
+                                              await reInitStream();
+                                              FocusScope.of(context)
+                                                  .requestFocus(
+                                                FocusNode(),
+                                              );
+                                            }
+                                          },
                                         );
-                                      }
-                                    },
-                                  );
-                                },
-                                itemCount: snap.data!.length,
-                              );
+                                      },
+                                      itemCount: snap.data!.length,
+                                    )
+                                  : Text("");
                             }
                             return const SizedBox();
                           }),
                     ),
                   ],
-                )
-        )),
+                ))),
         TweenAnimationBuilder(
             curve: Curves.easeIn,
             tween: Tween<double>(begin: 0, end: value),
@@ -459,6 +491,7 @@ class _MainPageState extends State<MainPage> {
                                       setState(() {
                                         count = -5;
                                         value = 1;
+                                        chooseButton = true;
                                       });
                                     },
                                     child: Container(
@@ -482,6 +515,7 @@ class _MainPageState extends State<MainPage> {
                                         value = 1;
                                         count = 1;
                                         controller.removeMarker(point2);
+                                        chooseButton = true;
                                       });
                                     },
                                     child: Container(
