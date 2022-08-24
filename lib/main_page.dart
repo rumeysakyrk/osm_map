@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:maps_login_ui/database/authentication.dart';
 import 'dart:math';
 import 'favoriPage.dart';
 import 'main.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' as fs;
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -16,6 +18,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  RoadType rType=RoadType.car;
   double value = 0;
   bool chooseButton = true;
   late MapController controller;
@@ -75,6 +78,18 @@ class _MainPageState extends State<MainPage> {
     await FirebaseAuth.instance.signOut();
   }
 
+  int x = 0;
+  Future favCount() async {
+    await fs.FirebaseFirestore.instance
+        .collection('rotalar')
+        .doc(Authentication().userUID)
+        .get()
+        .then((value) {
+      x = value["count"];
+    });
+    return x;
+  }
+
   @override
   void initState() {
     Km = "-";
@@ -98,6 +113,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   void roadActionBt(GeoPoint point1, GeoPoint point2, RoadType type) async {
+    rType=type;
     try {
       await controller.removeLastRoad();
       showFab.value = true;
@@ -155,6 +171,7 @@ class _MainPageState extends State<MainPage> {
   GeoPoint point2 = GeoPoint(latitude: 42, longitude: 40);
   String address1 = "";
   String address2 = "";
+  IconData iconFav = Icons.favorite_border_outlined;
 
   @override
   Widget build(BuildContext context) {
@@ -224,13 +241,37 @@ class _MainPageState extends State<MainPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.favorite_border_rounded,
-                          size: 25,
-                          color: Colors.white,
-                        )),
+                    duration != "-"
+                        ? IconButton(
+                            onPressed: () {
+                              setState(() {
+                                if (iconFav == Icons.favorite_border_outlined) {
+                                  fs.FirebaseFirestore.instance
+                                      .collection('rotalar')
+                                      .doc(Authentication().userUID)
+                                      .update({
+                                    "fav$x": [
+                                      fs.GeoPoint(
+                                          point1.latitude, point1.longitude),
+                                      fs.GeoPoint(
+                                          point2.latitude, point2.longitude),
+                                      address1,address2,rType.toString()
+                                    ],
+                                    "count": x + 1
+                                  });
+                                  iconFav = Icons.favorite_outlined;
+                                  x++;
+                                } else {
+                                  iconFav = Icons.favorite_border_outlined;
+                                }
+                              });
+                            },
+                            icon: Icon(
+                              iconFav,
+                              size: 25,
+                              color: Colors.white,
+                            ))
+                        : Text(""),
                     SizedBox(
                       width: 40,
                     ),
@@ -243,8 +284,7 @@ class _MainPageState extends State<MainPage> {
                       width: 40,
                     ),
                     IconButton(
-                        onPressed: () {
-                        },
+                        onPressed: () {},
                         icon: const Icon(
                           Icons.star_border_outlined,
                           size: 25,
@@ -342,23 +382,32 @@ class _MainPageState extends State<MainPage> {
                                 ListTile(
                                   leading: Icon(Icons.favorite),
                                   title: Text('Favori Rotalar'),
-                                  onTap: () => {Navigator.of(context).pop()},
+                                  onTap: ()  {Navigator.pushAndRemoveUntil(context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return favoriPage();
+                                        },
+                                      ), (route) => false);
+                                  },
                                 ),
                                 ListTile(
                                   leading: Icon(Icons.star),
-                                  title: Text('Gidilecek Rotalar',),
+                                  title: Text(
+                                    'Gidilecek Rotalar',
+                                  ),
                                   onTap: () => {Navigator.of(context).pop()},
                                 ),
                                 ListTile(
                                   leading: Icon(Icons.exit_to_app),
                                   title: Text('Çıkış'),
-                                  onTap: () {_signOut();
-                                  Navigator.pushAndRemoveUntil(context,
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          return HomePage();
-                                        },
-                                      ), (route) => false);
+                                  onTap: () {
+                                    _signOut();
+                                    Navigator.pushAndRemoveUntil(context,
+                                        MaterialPageRoute(
+                                      builder: (context) {
+                                        return HomePage();
+                                      },
+                                    ), (route) => false);
                                   },
                                 ),
                               ],

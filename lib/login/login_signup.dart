@@ -174,10 +174,7 @@ class _Login_SignUpState extends State<Login_SignUp> {
                     Users user = Users( email: emailEditingController.text, password: passwordEditingController.text);
                     FireStore().addUser(password: ' ', email: '');
                     FirebaseFirestore.instance.collection('rotalar').doc(Authentication().userUID).set({
-                      'favoriler':{
-                        "point1":GeoPoint(1,2),
-                        "point2":GeoPoint(3,5)
-                      }
+                      'count':0
                     });
                     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
                       builder: (context) {
