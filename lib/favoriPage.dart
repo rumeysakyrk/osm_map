@@ -64,7 +64,7 @@ class _favoriPageState extends State<favoriPage> {
                   return Card(
                     child: ListTile(
                       onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(geoPoint1:favs[index][0],geoPoint2: favs[index][1],)));
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(geoPoint1:favs[index][0],geoPoint2: favs[index][1], RType: favs[index][4])));
                       },
                       leading: Text(
                         "Fav$index",

@@ -12,14 +12,15 @@ import 'package:cloud_firestore/cloud_firestore.dart' as fs;
 
 class MainPage extends StatefulWidget {
   fs.GeoPoint? geoPoint1,geoPoint2;
-  MainPage({Key? key,this.geoPoint1,this.geoPoint2,}) : super(key: key);
+  String? RType;
+  MainPage({Key? key,this.geoPoint1,this.geoPoint2,this.RType,}) : super(key: key);
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
-  RoadType rType=RoadType.car;
   double value = 0;
+  RoadType rType= RoadType.car;
   bool chooseButton = true;
   late MapController controller;
   ValueNotifier<bool> trackingNotifier = ValueNotifier(false);
@@ -110,7 +111,7 @@ class _MainPageState extends State<MainPage> {
       });
     if(widget.geoPoint1!= null){
 
-    roadActionBt(GeoPoint(latitude: widget.geoPoint1!.latitude, longitude: widget.geoPoint1!.longitude,),GeoPoint(latitude: widget.geoPoint2!.latitude, longitude: widget.geoPoint2!.longitude), RoadType.car);
+    roadActionBt(GeoPoint(latitude: widget.geoPoint1!.latitude, longitude: widget.geoPoint1!.longitude,),GeoPoint(latitude: widget.geoPoint2!.latitude, longitude: widget.geoPoint2!.longitude), widget.RType.toString()=="RoadType.car"? RoadType.car: widget.RType.toString()=="RoadType.foot"? RoadType.foot:RoadType.bike);
 
     }
     });
@@ -184,6 +185,7 @@ class _MainPageState extends State<MainPage> {
   GeoPoint point2 = GeoPoint(latitude: 42, longitude: 40);
   String address1 = "";
   String address2 = "";
+
   IconData iconFav = Icons.favorite_border_outlined;
 
   @override
