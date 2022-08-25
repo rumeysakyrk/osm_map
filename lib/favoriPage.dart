@@ -63,7 +63,14 @@ class _favoriPageState extends State<favoriPage> {
                 itemBuilder: (context, index) {
                   return Card(
                     child: ListTile(
-                      title: Column(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(geoPoint1:favs[index][0],geoPoint2: favs[index][1],)));
+                      },
+                      leading: Text(
+                        "Fav$index",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),                      title: Column(
                         children: [
                           Row(
                             children: [
@@ -93,11 +100,6 @@ class _favoriPageState extends State<favoriPage> {
                           )
                         ],
                       ),
-                      leading: Text(
-                        "Fav$index",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
                       trailing: Container(
                           width: 40,
                           height: 40,
@@ -105,6 +107,7 @@ class _favoriPageState extends State<favoriPage> {
                             onPressed: () {},
                             icon: Icon(Icons.favorite),
                           )),
+
                     ),
                   );
                 }),

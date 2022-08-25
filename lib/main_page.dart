@@ -11,8 +11,8 @@ import 'main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' as fs;
 
 class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
-
+  fs.GeoPoint? geoPoint1,geoPoint2;
+  MainPage({Key? key,this.geoPoint1,this.geoPoint2,}) : super(key: key);
   @override
   State<MainPage> createState() => _MainPageState();
 }
@@ -104,6 +104,16 @@ class _MainPageState extends State<MainPage> {
         longitude: 40.4737324,
       ),
     );
+    Future.delayed(Duration(seconds: 3),  () {
+      setState((){
+        iconFav=Icons.favorite_outlined;
+      });
+    if(widget.geoPoint1!= null){
+
+    roadActionBt(GeoPoint(latitude: widget.geoPoint1!.latitude, longitude: widget.geoPoint1!.longitude,),GeoPoint(latitude: widget.geoPoint2!.latitude, longitude: widget.geoPoint2!.longitude), RoadType.car);
+
+    }
+    });
   }
 
   @override
@@ -114,10 +124,13 @@ class _MainPageState extends State<MainPage> {
 
   void roadActionBt(GeoPoint point1, GeoPoint point2, RoadType type) async {
     rType=type;
+    if(count==0){
+      controller.addMarker(point1);
+      controller.addMarker(point2);
+    }
     try {
-      await controller.removeLastRoad();
+      controller.clearAllRoads();
       showFab.value = true;
-
       RoadInfo roadInformation = await controller.drawRoad(
         point1,
         point2,
