@@ -1,33 +1,29 @@
 import 'package:flutter/material.dart';
 
 class LoginOption extends StatelessWidget {
+  const LoginOption({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-
-        Text(
+        const Text(
           "Hesabın var mı?",
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500
-          ),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
-
-        SizedBox(
+        const SizedBox(
           height: 16,
         ),
-
         Container(
           height: 40,
           decoration: BoxDecoration(
             color: Colors.lightGreen.shade200,
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(25),
             ),
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
                 color: Colors.lightGreen,
                 spreadRadius: 3,
@@ -36,7 +32,7 @@ class LoginOption extends StatelessWidget {
               ),
             ],
           ),
-          child:  Center(
+          child: const Center(
             child: Text(
               "GİRİŞ",
               style: TextStyle(

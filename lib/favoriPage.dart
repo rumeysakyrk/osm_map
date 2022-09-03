@@ -4,15 +4,16 @@ import 'package:flutter/material.dart';
 import 'dataBase/authentication.dart';
 import 'main_page.dart';
 
-class favoriPage extends StatefulWidget {
-  const favoriPage({Key? key}) : super(key: key);
+class FavoriPage extends StatefulWidget {
+  const FavoriPage({Key? key}) : super(key: key);
 
   @override
-  State<favoriPage> createState() => _favoriPageState();
+  State<FavoriPage> createState() => _FavoriPageState();
 }
 
-class _favoriPageState extends State<favoriPage> {
+class _FavoriPageState extends State<FavoriPage> {
   List favs = [];
+  List deleted = [];
 
   Future<void> favCount() async {
     await fs.FirebaseFirestore.instance
@@ -20,13 +21,25 @@ class _favoriPageState extends State<favoriPage> {
         .doc(Authentication().userUID)
         .get()
         .then((value) {
-      print(value["count"]);
+      deleted = value["deleted"];
       for (int i = 0; i < value["count"]; i++) {
         setState(() {
-          print(value["fav$i"]);
           favs.add(value["fav$i"]);
         });
       }
+    });
+  }
+
+  Future<void> deleteRoad(int x) async {
+    setState(() {
+      deleted.add(x);
+    });
+
+    await fs.FirebaseFirestore.instance
+        .collection('rotalar')
+        .doc(Authentication().userUID)
+        .update({
+      "deleted": deleted,
     });
   }
 
@@ -40,7 +53,7 @@ class _favoriPageState extends State<favoriPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Favori Rotalar",
         ),
         leading: IconButton(
@@ -51,7 +64,7 @@ class _favoriPageState extends State<favoriPage> {
               },
             ), (route) => false);
           },
-          icon: Icon(Icons.arrow_back_sharp),
+          icon: const Icon(Icons.arrow_back_sharp),
         ),
         backgroundColor: Colors.lightGreen.shade300,
       ),
@@ -61,55 +74,67 @@ class _favoriPageState extends State<favoriPage> {
             child: ListView.builder(
                 itemCount: favs.length,
                 itemBuilder: (context, index) {
-                  return Card(
-                    child: ListTile(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(geoPoint1:favs[index][0],geoPoint2: favs[index][1], RType: favs[index][4])));
-                      },
-                      leading: Text(
-                        "Fav$index",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),                      title: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Text("Point 1",
-                                  style: TextStyle(fontSize: 15)),
-                              SizedBox(
-                                width: 10,
-                              ),
-
-                              Text(favs[index][2].toString().split(",")[0],
-                                  style: TextStyle(fontSize: 14)),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                "Point 2",
-                                style: TextStyle(fontSize: 15),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-
-                              Text(favs[index][3].toString().split(",")[0],
-                                  style: TextStyle(fontSize: 14)),
-                            ],
-                          )
-                        ],
+                  if (deleted.contains(index)) {
+                    return const Text("");
+                  } else {
+                    return Card(
+                      child: ListTile(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MainPage(
+                                      geoPoint1: favs[index][0],
+                                      geoPoint2: favs[index][1],
+                                      RType: favs[index][4])));
+                        },
+                        leading: Text(
+                          "Fav$index",
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        title: Column(
+                          children: [
+                            Row(
+                              children: [
+                                const Text("Point 1",
+                                    style: TextStyle(fontSize: 15)),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(favs[index][2].toString().split(",")[0],
+                                    style: const TextStyle(fontSize: 14)),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                const Text(
+                                  "Point 2",
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(favs[index][3].toString().split(",")[0],
+                                    style: const TextStyle(fontSize: 14)),
+                              ],
+                            )
+                          ],
+                        ),
+                        trailing: SizedBox(
+                            width: 40,
+                            height: 40,
+                            child: IconButton(
+                              onPressed: () {
+                                  deleteRoad(index);
+                                
+                              },
+                              icon:
+                                  const Icon(Icons.remove_circle_outline_sharp),
+                            )),
                       ),
-                      trailing: Container(
-                          width: 40,
-                          height: 40,
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.favorite),
-                          )),
-
-                    ),
-                  );
+                    );
+                  }
                 }),
           ),
         ],

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:maps_login_ui/main.dart';
 import '../dataBase/authentication.dart';
 
-
 class ForgotPassword extends StatelessWidget {
   ForgotPassword({Key? key}) : super(key: key);
 
@@ -18,9 +17,7 @@ class ForgotPassword extends StatelessWidget {
             opacity: 0.3),
       ),
       child: SafeArea(
-
         child: Scaffold(
-
           resizeToAvoidBottomInset: false,
           backgroundColor: Colors.transparent,
           body: Column(
@@ -30,8 +27,8 @@ class ForgotPassword extends StatelessWidget {
                 onPressed: () {
                   Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (context) =>  HomePage()),
-                          (route) => false);
+                      MaterialPageRoute(builder: (context) => const HomePage()),
+                      (route) => false);
                 },
                 icon: const Icon(
                   Icons.arrow_back_ios,
@@ -42,7 +39,9 @@ class ForgotPassword extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 200,),
+                  const SizedBox(
+                    height: 200,
+                  ),
                   Container(
                     margin: const EdgeInsets.only(left: 35, right: 35),
                     child: Column(
@@ -73,12 +72,9 @@ class ForgotPassword extends StatelessWidget {
                         ),
                         ElevatedButton(
                             onPressed: () async {
-                              if (myControllerForgotPw
-                                  .text.isNotEmpty) {
-                                String forgotPassword =
-                                await Authentication()
-                                    .forgotPassword(
-                                    myControllerForgotPw.text);
+                              if (myControllerForgotPw.text.isNotEmpty) {
+                                String forgotPassword = await Authentication()
+                                    .forgotPassword(myControllerForgotPw.text);
                                 if (forgotPassword == 'true') {
                                   showDialog(
                                     context: context,
@@ -94,7 +90,10 @@ class ForgotPassword extends StatelessWidget {
                                     context: context,
                                     builder: (context) {
                                       return AlertDialog(
-                                        content: Text(forgotPassword,textAlign: TextAlign.center,),
+                                        content: Text(
+                                          forgotPassword,
+                                          textAlign: TextAlign.center,
+                                        ),
                                       );
                                     },
                                   );

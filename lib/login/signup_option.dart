@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SignUpOption extends StatelessWidget {
+  const SignUpOption({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -8,25 +9,22 @@ class SignUpOption extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-
-        Text(
+        const Text(
           "YA DA",
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
             height: 1,
-            color:Colors.black,
+            color: Colors.black,
           ),
         ),
-
-        SizedBox(
+        const SizedBox(
           height: 24,
         ),
-
         Container(
           height: 40,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(
               Radius.circular(25),
@@ -36,11 +34,11 @@ class SignUpOption extends StatelessWidget {
                 color: Colors.black54,
                 spreadRadius: 3,
                 blurRadius: 4,
-                offset: Offset(0,3),
+                offset: Offset(0, 3),
               ),
             ],
           ),
-          child:  Center(
+          child: const Center(
             child: Text(
               "KAYIT OL",
               style: TextStyle(

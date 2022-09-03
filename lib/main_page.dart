@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:maps_login_ui/database/authentication.dart';
 import 'dart:math';
@@ -11,16 +9,18 @@ import 'main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' as fs;
 
 class MainPage extends StatefulWidget {
-  fs.GeoPoint? geoPoint1,geoPoint2;
+  fs.GeoPoint? geoPoint1, geoPoint2;
   String? RType;
-  MainPage({Key? key,this.geoPoint1,this.geoPoint2,this.RType,}) : super(key: key);
+  bool? signed;
+  MainPage({Key? key, this.geoPoint1, this.geoPoint2, this.RType, this.signed})
+      : super(key: key);
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
   double value = 0;
-  RoadType rType= RoadType.car;
+  RoadType rType = RoadType.car;
   bool chooseButton = true;
   late MapController controller;
   ValueNotifier<bool> trackingNotifier = ValueNotifier(false);
@@ -93,7 +93,8 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
-    Km = "-";
+    favCount();
+    km = "-";
     duration = "-";
     textEditingController.addListener(textOnChanged);
     value = 0;
@@ -105,15 +106,25 @@ class _MainPageState extends State<MainPage> {
         longitude: 40.4737324,
       ),
     );
-    Future.delayed(Duration(seconds: 3),  () {
-      setState((){
-        iconFav=Icons.favorite_outlined;
+    Future.delayed(const Duration(seconds: 3), () {
+      setState(() {
+        iconFav = Icons.favorite_border_outlined;
       });
-    if(widget.geoPoint1!= null){
-
-    roadActionBt(GeoPoint(latitude: widget.geoPoint1!.latitude, longitude: widget.geoPoint1!.longitude,),GeoPoint(latitude: widget.geoPoint2!.latitude, longitude: widget.geoPoint2!.longitude), widget.RType.toString()=="RoadType.car"? RoadType.car: widget.RType.toString()=="RoadType.foot"? RoadType.foot:RoadType.bike);
-
-    }
+      if (widget.geoPoint1 != null) {
+        roadActionBt(
+            GeoPoint(
+              latitude: widget.geoPoint1!.latitude,
+              longitude: widget.geoPoint1!.longitude,
+            ),
+            GeoPoint(
+                latitude: widget.geoPoint2!.latitude,
+                longitude: widget.geoPoint2!.longitude),
+            widget.RType.toString() == "RoadType.car"
+                ? RoadType.car
+                : widget.RType.toString() == "RoadType.foot"
+                    ? RoadType.foot
+                    : RoadType.bike);
+      }
     });
   }
 
@@ -123,18 +134,20 @@ class _MainPageState extends State<MainPage> {
     super.dispose();
   }
 
-  void roadActionBt(GeoPoint point1, GeoPoint point2, RoadType type) async {
-    rType=type;
-    if(count==0){
-      controller.addMarker(point1);
-      controller.addMarker(point2);
+  void roadActionBt(GeoPoint pointA, GeoPoint pointB, RoadType type) async {
+    rType = type;
+    if (count == 0) {
+      controller.addMarker(pointA);
+      controller.addMarker(pointB);
+      point1 = pointA;
+      point2 = pointB;
     }
     try {
       controller.clearAllRoads();
       showFab.value = true;
       RoadInfo roadInformation = await controller.drawRoad(
-        point1,
-        point2,
+        pointA,
+        pointB,
         roadType: type,
         roadOption: const RoadOption(
           roadWidth: 10,
@@ -147,14 +160,9 @@ class _MainPageState extends State<MainPage> {
         duration = Duration(seconds: roadInformation.duration!.toInt())
             .inMinutes
             .toString();
-        Km = roadInformation.distance!.floorToDouble().toString();
+        km = roadInformation.distance!.floorToDouble().toString();
         hasRoad = true;
       });
-
-      print(
-          "duration:${Duration(seconds: roadInformation.duration!.toInt()).inHours}");
-      print("distance:${roadInformation.distance}Km");
-      print(roadInformation.route.length);
     } on RoadException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -174,13 +182,37 @@ class _MainPageState extends State<MainPage> {
 
     setState(() {
       hasRoad = false;
-      Km = "-";
+      km = "-";
       duration = "-";
     });
   }
 
+  void warnUser(String message) {
+    showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+              title: const Text("Uyarı"),
+              content: Text("$message için giriş yapmalısınız"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                  },
+                  child: Container(
+                    color: Colors.green,
+                    padding: const EdgeInsets.all(14),
+                    child: const Text(
+                      "Tamam",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                )
+              ],
+            ));
+  }
+
   int count = 0;
-  late String duration = "-", Km = "-";
+  late String duration = "-", km = "-";
   GeoPoint point1 = GeoPoint(latitude: 42, longitude: 40);
   GeoPoint point2 = GeoPoint(latitude: 42, longitude: 40);
   String address1 = "";
@@ -215,7 +247,7 @@ class _MainPageState extends State<MainPage> {
                         color: Colors.white,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 40,
                     ),
                     IconButton(
@@ -235,7 +267,7 @@ class _MainPageState extends State<MainPage> {
                       icon: const Icon(Icons.directions_walk,
                           size: 25, color: Colors.white),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 40,
                     ),
                     IconButton(
@@ -256,9 +288,12 @@ class _MainPageState extends State<MainPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    duration != "-"
-                        ? IconButton(
-                            onPressed: () {
+                    if (duration != "-")
+                      IconButton(
+                          onPressed: () {
+                            if (widget.signed == false) {
+                              warnUser("Favori eklemek");
+                            } else {
                               setState(() {
                                 if (iconFav == Icons.favorite_border_outlined) {
                                   fs.FirebaseFirestore.instance
@@ -270,7 +305,9 @@ class _MainPageState extends State<MainPage> {
                                           point1.latitude, point1.longitude),
                                       fs.GeoPoint(
                                           point2.latitude, point2.longitude),
-                                      address1,address2,rType.toString()
+                                      address1,
+                                      address2,
+                                      rType.toString()
                                     ],
                                     "count": x + 1
                                   });
@@ -280,22 +317,24 @@ class _MainPageState extends State<MainPage> {
                                   iconFav = Icons.favorite_border_outlined;
                                 }
                               });
-                            },
-                            icon: Icon(
-                              iconFav,
-                              size: 25,
-                              color: Colors.white,
-                            ))
-                        : Text(""),
-                    SizedBox(
+                            }
+                          },
+                          icon: Icon(
+                            iconFav,
+                            size: 25,
+                            color: Colors.white,
+                          ))
+                    else
+                      const Text(""),
+                    const SizedBox(
                       width: 40,
                     ),
                     Text(
-                      "Süre: " + duration + "  ",
-                      style: TextStyle(fontSize: 16),
+                      "Süre: $duration  ",
+                      style: const TextStyle(fontSize: 16),
                     ),
-                    Text("Km: " + Km, style: TextStyle(fontSize: 16)),
-                    SizedBox(
+                    Text("Km: $km", style: const TextStyle(fontSize: 16)),
+                    const SizedBox(
                       width: 40,
                     ),
                     IconButton(
@@ -322,196 +361,188 @@ class _MainPageState extends State<MainPage> {
           )),
         ),
         SafeArea(
-            child: Container(
-                width: 200,
-                padding: EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    DrawerHeader(
-                      child: Column(
-                        children: [
-                          CircleAvatar(
-                              radius: (68),
-                              backgroundColor: Colors.white,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(66),
-                                child: Image.asset("images/mapolestar.png"),
-                              )),
-                        ],
-                      ),
-                    ),
-                    chooseButton == true
-                        ? TextField(
-                            controller: textEditingController,
-                            onEditingComplete: () async {
-                              FocusScope.of(context)
-                                  .requestFocus(new FocusNode());
+          child: Container(
+            width: 200,
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                DrawerHeader(
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                          radius: (68),
+                          backgroundColor: Colors.white,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(66),
+                            child: Image.asset("images/mapolestar.png"),
+                          )),
+                    ],
+                  ),
+                ),
+                chooseButton == true
+                    ? TextField(
+                        controller: textEditingController,
+                        onEditingComplete: () async {
+                          FocusScope.of(context).requestFocus(FocusNode());
+                        },
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(
+                            Icons.search,
+                            color: Colors.black,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25),
+                            borderSide: const BorderSide(
+                              width: 0,
+                              style: BorderStyle.none,
+                            ),
+                          ),
+                          filled: true,
+                          fillColor: Colors.lightGreen.shade300,
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 0),
+                          suffix: ValueListenableBuilder<TextEditingValue>(
+                            valueListenable: textEditingController,
+                            builder: (ctx, text, child) {
+                              if (text.text.isNotEmpty) {
+                                return child!;
+                              }
+                              return const SizedBox.shrink();
                             },
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(
-                                Icons.search,
+                            child: InkWell(
+                              focusNode: FocusNode(),
+                              onTap: () {
+                                textEditingController.clear();
+
+                                FocusScope.of(context)
+                                    .requestFocus(FocusNode());
+                              },
+                              child: const Icon(
+                                Icons.close,
+                                size: 16,
                                 color: Colors.black,
                               ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(25),
-                                borderSide: BorderSide(
-                                  width: 0,
-                                  style: BorderStyle.none,
-                                ),
-                              ),
-                              filled: true,
-                              fillColor: Colors.lightGreen.shade300,
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 0),
-                              suffix: ValueListenableBuilder<TextEditingValue>(
-                                valueListenable: textEditingController,
-                                builder: (ctx, text, child) {
-                                  if (text.text.isNotEmpty) {
-                                    return child!;
-                                  }
-                                  return SizedBox.shrink();
-                                },
-                                child: InkWell(
-                                  focusNode: FocusNode(),
-                                  onTap: () {
-                                    textEditingController.clear();
-
-                                    FocusScope.of(context)
-                                        .requestFocus(new FocusNode());
-                                  },
-                                  child: Icon(
-                                    Icons.close,
-                                    size: 16,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                              focusColor: Colors.black,
-                              hintText: "Ara",
                             ),
-                          )
-                        : Expanded(
-                            child: ListView(
-                              padding: EdgeInsets.zero,
-                              children: <Widget>[
-                                ListTile(
-                                  leading: Icon(Icons.favorite),
-                                  title: Text('Favori Rotalar'),
-                                  onTap: ()  {Navigator.pushAndRemoveUntil(context,
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          return favoriPage();
-                                        },
-                                      ), (route) => false);
-                                  },
-                                ),
-                                ListTile(
-                                  leading: Icon(Icons.star),
-                                  title: Text(
-                                    'Gidilecek Rotalar',
-                                  ),
-                                  onTap: () => {Navigator.of(context).pop()},
-                                ),
-                                ListTile(
-                                  leading: Icon(Icons.exit_to_app),
-                                  title: Text('Çıkış'),
-                                  onTap: () {
-                                    _signOut();
+                          ),
+                          focusColor: Colors.black,
+                          hintText: "Ara",
+                        ),
+                      )
+                    : Expanded(
+                        child: ListView(
+                          padding: EdgeInsets.zero,
+                          children: <Widget>[
+                            ListTile(
+                                leading: const Icon(Icons.favorite),
+                                title: const Text('Favori Rotalar'),
+                                onTap: () {
+                                  if (widget.signed == false) {
+                                    warnUser("Favori rotaları görüntülemek");
+                                  } else {
                                     Navigator.pushAndRemoveUntil(context,
                                         MaterialPageRoute(
                                       builder: (context) {
-                                        return HomePage();
+                                        return const FavoriPage();
                                       },
                                     ), (route) => false);
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Expanded(
-                      child: StreamBuilder<List<SearchInfo>>(
-                          stream: streamSuggestion.stream,
-                          key: streamKey,
-                          builder: (ctx, snap) {
-                            if (snap.hasData) {
-                              return chooseButton == true
-                                  ? ListView.builder(
-                                      itemExtent: 50.0,
-                                      itemBuilder: (ctx, index) {
-                                        return ListTile(
-                                          title: Text(
-                                            snap.data![index].address
-                                                .toString(),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.fade,
-                                          ),
-                                          onTap: () async {
-                                            if (count < 2) {
-                                              if (count == -5) {
-                                                setState(() {
-                                                  controller
-                                                      .removeMarker(point1);
-                                                  address1 = snap
-                                                      .data![index].address
-                                                      .toString();
-                                                });
-                                                count = 1;
-                                                point1 =
-                                                    snap.data![index].point!;
-                                              } else if (count == 0) {
-                                                setState(() {
-                                                  address1 = snap
-                                                      .data![index].address
-                                                      .toString();
-                                                });
-                                                point1 =
-                                                    snap.data![index].point!;
-                                              } else {
-                                                setState(() {
-                                                  address2 = snap
-                                                      .data![index].address
-                                                      .toString();
-                                                });
-                                                point2 =
-                                                    snap.data![index].point!;
-                                              }
-                                              setState(() {
-                                                count++;
-                                              });
-                                              controller.addMarker(
-                                                  snap.data![index].point!);
-                                              controller.goToLocation(
-                                                snap.data![index].point!,
-                                              );
-                                              controller.setZoom(zoomLevel: 20);
+                                  }
+                                }),
+                            ListTile(
+                              leading: const Icon(Icons.exit_to_app),
+                              title: const Text('Çıkış'),
+                              onTap: () {
+                                if (widget.signed == true) {
+                                  _signOut();
+                                }
 
-                                              notifierAutoCompletion.value =
-                                                  false;
-                                              await reInitStream();
-                                              FocusScope.of(context)
-                                                  .requestFocus(
-                                                FocusNode(),
-                                              );
-                                            }
-                                          },
+                                Navigator.pushAndRemoveUntil(context,
+                                    MaterialPageRoute(
+                                  builder: (context) {
+                                    return const HomePage();
+                                  },
+                                ), (route) => false);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Expanded(
+                  child: StreamBuilder<List<SearchInfo>>(
+                    stream: streamSuggestion.stream,
+                    key: streamKey,
+                    builder: (ctx, snap) {
+                      if (snap.hasData) {
+                        return chooseButton == true
+                            ? ListView.builder(
+                                itemExtent: 50.0,
+                                itemBuilder: (ctx, index) {
+                                  return ListTile(
+                                    title: Text(
+                                      snap.data![index].address.toString(),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.fade,
+                                    ),
+                                    onTap: () async {
+                                      if (count < 2) {
+                                        if (count == -5) {
+                                          setState(() {
+                                            controller.removeMarker(point1);
+                                            address1 = snap.data![index].address
+                                                .toString();
+                                          });
+                                          count = 1;
+                                          point1 = snap.data![index].point!;
+                                        } else if (count == 0) {
+                                          setState(() {
+                                            address1 = snap.data![index].address
+                                                .toString();
+                                          });
+                                          point1 = snap.data![index].point!;
+                                        } else {
+                                          setState(() {
+                                            address2 = snap.data![index].address
+                                                .toString();
+                                          });
+                                          point2 = snap.data![index].point!;
+                                        }
+                                        setState(() {
+                                          count++;
+                                        });
+                                        controller.addMarker(
+                                            snap.data![index].point!);
+                                        controller.goToLocation(
+                                          snap.data![index].point!,
                                         );
-                                      },
-                                      itemCount: snap.data!.length,
-                                    )
-                                  : Text("");
-                            }
-                            return const SizedBox();
-                          }),
-                    ),
-                  ],
-                ))),
+                                        controller.setZoom(zoomLevel: 4);
+
+                                        notifierAutoCompletion.value = false;
+                                        await reInitStream();
+                                        FocusScope.of(context).requestFocus(
+                                          FocusNode(),
+                                        );
+                                      }
+                                    },
+                                  );
+                                },
+                                itemCount: snap.data!.length,
+                              )
+                            : const Text("");
+                      }
+                      return const SizedBox();
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
         TweenAnimationBuilder(
             curve: Curves.easeIn,
             tween: Tween<double>(begin: 0, end: value),
-            duration: Duration(milliseconds: 500),
+            duration: const Duration(milliseconds: 500),
             builder: (_, double val, __) {
               return Transform(
                 alignment: Alignment.center,
@@ -529,14 +560,14 @@ class _MainPageState extends State<MainPage> {
                           minZoomLevel: 2,
                           maxZoomLevel: 18,
                           userLocationMarker: UserLocationMaker(
-                            personMarker: MarkerIcon(
+                            personMarker: const MarkerIcon(
                               icon: Icon(
                                 Icons.cached,
                                 color: Colors.red,
                                 size: 70,
                               ),
                             ),
-                            directionArrowMarker: MarkerIcon(
+                            directionArrowMarker: const MarkerIcon(
                               icon: Icon(
                                 Icons.location_history_rounded,
                                 color: Colors.red,
@@ -588,11 +619,11 @@ class _MainPageState extends State<MainPage> {
                                           border:
                                               Border.all(color: Colors.black)),
                                       child: Text(
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
                                         count == 2 || count == -5
                                             ? address2
                                             : "",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(fontSize: 24),
                                       ),
                                     ),

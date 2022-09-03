@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../database/authentication.dart';
@@ -28,15 +29,20 @@ class _LoginScreenState extends State<LoginScreen> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Text(
-          "Hoşgeldiniz",
+        const Text(
+          "Hoş Geldiniz",
           style: TextStyle(
+              fontStyle: FontStyle.italic,
               fontSize: 16,
               color: Colors.black,
-              height: 2,
+              height: 1,
               fontWeight: FontWeight.w500),
         ),
-        Text(
+        const SizedBox(
+          height: 8,
+        ),
+
+        const Text(
           "maPolestar",
           style: TextStyle(
             fontSize: 36,
@@ -46,40 +52,47 @@ class _LoginScreenState extends State<LoginScreen> {
             height: 1,
           ),
         ),
-        Text(
+        const SizedBox(
+          height: 8,
+        ),
+
+        const Text(
           "Devam etmek için lütfen giriş yapınız",
           style: TextStyle(
+              fontStyle: FontStyle.italic,
               fontSize: 16,
               color: Colors.black,
               height: 1,
               fontWeight: FontWeight.w500),
         ),
-        SizedBox(
+        const SizedBox(
           height: 16,
         ),
         TextField(
+          keyboardType: TextInputType.emailAddress,
           controller: myController,
           autofocus: false,
           decoration: InputDecoration(
             hintText: 'E-Mail',
-            hintStyle: TextStyle(
+            hintStyle: const TextStyle(
               fontSize: 16,
               color: Colors.black,
               fontWeight: FontWeight.bold,
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(25),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 width: 0,
                 style: BorderStyle.none,
               ),
             ),
             filled: true,
             fillColor: Colors.lightGreen.shade200,
-            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 16,
         ),
         TextField(
@@ -89,34 +102,35 @@ class _LoginScreenState extends State<LoginScreen> {
           autofocus: false,
           decoration: InputDecoration(
             hintText: 'Şifre',
-            hintStyle: TextStyle(
+            hintStyle: const TextStyle(
               fontSize: 16,
               color: Colors.black,
               fontWeight: FontWeight.bold,
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(25),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 width: 0,
                 style: BorderStyle.none,
               ),
             ),
             filled: true,
             fillColor: Colors.lightGreen.shade200,
-            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 24,
         ),
         Container(
           height: 40,
           decoration: BoxDecoration(
             color: Colors.lightGreen.shade200,
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(25),
             ),
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
                 color: Colors.lightGreen,
                 spreadRadius: 3,
@@ -127,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           child: Center(
             child: TextButton(
-                child: Text(
+                child: const Text(
                   "GİRİŞ",
                   style: TextStyle(
                     fontSize: 24,
@@ -138,13 +152,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: () async {
                   var signing = await Authentication()
                       .logIn(myController.text, myControllerPw.text);
-                  print(signing);
                   if (signing == 'true') {
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
                         builder: (context) {
-                          return MainPage();
+                          return MainPage(
+                            signed: true,
+                          );
                         },
                       ),
                       (route) => false,
@@ -162,7 +177,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 }),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 16,
         ),
         Row(
@@ -170,14 +185,12 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             TextButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            ForgotPassword()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ForgotPassword()));
               },
               child: const Text(
-                'Şifreni mi Unuttun?',
+                'Şifreni mi\nUnuttun?',
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -192,14 +205,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) {
-                      return MainPage();
+                      return MainPage(signed: false);
                     },
                   ),
-                      (route) => false,
-                );;
+                  (route) => false,
+                );
               },
               child: const Text(
-                'Kayıt olmadan Giriş',
+                'Kayıt\nOlmadan Giriş',
+                textAlign: TextAlign.center,
+                maxLines: 2,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -208,8 +223,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-
-
           ],
         ),
       ],
